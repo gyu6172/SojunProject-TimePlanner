@@ -10,9 +10,11 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.sojun_timeplanner.MainActivity;
 import com.example.sojun_timeplanner.R;
 import com.example.sojun_timeplanner.View.TuesdayView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class TuesdayFragment extends Fragment {
@@ -24,6 +26,8 @@ public class TuesdayFragment extends Fragment {
     public static ArrayList fromMinuteArray = new ArrayList();
     public static ArrayList toHourArray = new ArrayList();
     public static ArrayList toMinuteArray = new ArrayList();
+
+    MainActivity mainActivity;
 
     public TuesdayFragment() {
 
@@ -37,6 +41,44 @@ public class TuesdayFragment extends Fragment {
         View v =LayoutInflater.from(getContext()).inflate(R.layout.fragment_tuesday,null);
         tuesdayView = v.findViewById(R.id.TuesdayView);
         relativeMemo = v.findViewById(R.id.relativeMemo);
+        v.setOnClickListener(view -> {
+            SimpleDateFormat HOUR = new SimpleDateFormat("HH");
+            SimpleDateFormat MINUTE = new SimpleDateFormat("mm");
+
+            int format_HOUR = Integer.parseInt(HOUR.format(System.currentTimeMillis()));
+            int format_MINUTE = Integer.parseInt(MINUTE.format(System.currentTimeMillis()));
+
+            int format = format_HOUR*60 + format_MINUTE;
+
+            int i;
+
+            int fromhour, fromminute;
+            int tohour, tominute;
+
+            int from, to;
+
+            for (i=0;i<tuesdayView.getCount();i++){
+                fromhour = (int)fromHourArray.get(i);
+                fromminute = (int)fromMinuteArray.get(i);
+                tohour = (int)toHourArray.get(i);
+                tominute = (int)toMinuteArray.get(i);
+
+                from = fromhour*60 + fromminute;
+                to = tohour*60 + tominute;
+
+                if(from < to){
+                    if(from <= format && format <= to){
+                        mainActivity.setMemoTextView(memoArray.get(i));
+                    }
+                }
+                else {
+                    if (from <= format || format <= to) {
+                        mainActivity.setMemoTextView(memoArray.get(i));
+                    }
+                }
+            }
+
+        });
 
         return v;
     }
@@ -58,33 +100,5 @@ public class TuesdayFragment extends Fragment {
 
         memoArray.add(memo);
 
-    }
-
-    public static String checkMemo(int time){
-        int i;
-        int fromH, fromM;
-        int toH, toM;
-        int from, to;
-        for (i=0;i<tuesdayView.getCount();i++){
-            fromH = (int)fromHourArray.get(i);
-            fromM = (int)fromMinuteArray.get(i);
-            toH = (int)toHourArray.get(i);
-            toM = (int)toMinuteArray.get(i);
-
-            from = fromH * 60 + fromM;
-            to = toH * 60 + toM;
-
-            if(from < to){
-                if(from <= time && time <= to){
-                    return memoArray.get(i);
-                }
-            }
-            else{
-                if(from <= time || time <= to){
-                    return memoArray.get(i);
-                }
-            }
-        }
-        return null;
     }
 }

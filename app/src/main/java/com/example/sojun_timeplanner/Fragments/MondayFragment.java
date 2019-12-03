@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.PagerTabStrip;
+import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sojun_timeplanner.MainActivity;
+import com.example.sojun_timeplanner.PagerAdapter;
 import com.example.sojun_timeplanner.R;
 import com.example.sojun_timeplanner.View.MondayView;
+import com.google.android.material.tabs.TabLayout;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class MondayFragment extends Fragment{
@@ -31,10 +37,29 @@ public class MondayFragment extends Fragment{
     public static ArrayList toMinuteArray = new ArrayList();
     public static ArrayList<String> memoArray = new ArrayList<String>();
 
+    MainActivity mainActivity;
+
+    private ViewPager mViewPager;
+    private TabLayout tabLayout;
+    private PagerAdapter adapter;
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        this.mViewPager = (ViewPager)view.findViewById(R.id.ViewPager);
+        this.mViewPager.setAdapter(adapter);
+
+        this.tabLayout = (TabLayout)view.findViewById(R.id.tab);
+        this.tabLayout.setupWithViewPager(this.mViewPager);
+
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        this.adapter = new PagerAdapter(getChildFragmentManager());
     }
 
     public MondayFragment() {
@@ -47,14 +72,46 @@ public class MondayFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v =LayoutInflater.from(getContext()).inflate(R.layout.fragment_monday,null);
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "ASDADF", Toast.LENGTH_SHORT).show();
-            }
-        });
         mondayView = v.findViewById(R.id.mondayView);
         relativeMemo = v.findViewById(R.id.relativeMemo);
+        v.setOnClickListener(view -> {
+            SimpleDateFormat HOUR = new SimpleDateFormat("HH");
+            SimpleDateFormat MINUTE = new SimpleDateFormat("mm");
+
+            int format_HOUR = Integer.parseInt(HOUR.format(System.currentTimeMillis()));
+            int format_MINUTE = Integer.parseInt(MINUTE.format(System.currentTimeMillis()));
+
+            int format = format_HOUR*60 + format_MINUTE;
+
+            int i;
+
+            int fromhour, fromminute;
+            int tohour, tominute;
+
+            int from, to;
+
+            for (i=0;i<mondayView.getCount();i++){
+                fromhour = (int)fromHourArray.get(i);
+                fromminute = (int)fromMinuteArray.get(i);
+                tohour = (int)toHourArray.get(i);
+                tominute = (int)toMinuteArray.get(i);
+
+                from = fromhour*60 + fromminute;
+                to = tohour*60 + tominute;
+
+                if(from < to){
+                    if(from <= format && format <= to){
+                        mainActivity.setMemoTextView(memoArray.get(i));
+                    }
+                }
+                else {
+                    if (from <= format || format <= to) {
+                        mainActivity.setMemoTextView(memoArray.get(i));
+                    }
+                }
+            }
+
+        });
         return v;
     }
 
@@ -75,33 +132,5 @@ public class MondayFragment extends Fragment{
         relativeMemo.addView(view, params);
 
         memoArray.add(memo);
-    }
-
-    public static String checkMemo(int time){
-        int i;
-        int fromH, fromM;
-        int toH, toM;
-        int from, to;
-        for (i=0;i<mondayView.getCount();i++){
-            fromH = (int)fromHourArray.get(i);
-            fromM = (int)fromMinuteArray.get(i);
-            toH = (int)toHourArray.get(i);
-            toM = (int)toMinuteArray.get(i);
-
-            from = fromH * 60 + fromM;
-            to = toH * 60 + toM;
-
-            if(from < to){
-                if(from <= time && time <= to){
-                    return memoArray.get(i);
-                }
-            }
-            else{
-                if(from <= time || time <= to){
-                    return memoArray.get(i);
-                }
-            }
-        }
-        return null;
     }
  }

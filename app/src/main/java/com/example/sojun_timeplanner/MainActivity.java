@@ -50,22 +50,6 @@ public class MainActivity extends AppCompatActivity {
     TextInputEditText memoEditText;
     Button add_Button;
 
-    MondayView mondayView;
-    TuesdayView tuesdayView;
-    WednesdayView wednesdayView;
-    ThursdayView thursdayView;
-    FridayView fridayView;
-    SaturdayView saturdayView;
-    SundayView sundayView;
-
-    MondayFragment mondayFragment;
-    TuesdayFragment tuesdayFragment;
-    WednesdayFragment wednesdayFragment;
-    ThursdayFragment thursdayFragment;
-    FridayFragment fridayFragment;
-    SaturdayFragment saturdayFragment;
-    SundayFragment sundayFragment;
-
     String color;
     String memo;
     String textColor;
@@ -82,10 +66,7 @@ public class MainActivity extends AppCompatActivity {
     ConstraintLayout constraintLayout;
     ConstraintLayout parentConstraint;
 
-    Button updateBtn;
-    String nowMemo;
-    TextView nowTodo;
-
+    public static TextView memoTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,9 +83,7 @@ public class MainActivity extends AppCompatActivity {
         memoEditText = findViewById(R.id.memo_input);
         add_Button = findViewById(R.id.add_Button);
         parentConstraint = findViewById(R.id.parentConstraint);
-        nowTodo = findViewById(R.id.memoText);
-
-        updateBtn = findViewById(R.id.updateBtn);
+        memoTextView = findViewById(R.id.memoText);
 
         constraintLayout = findViewById(R.id.ConstraintLayout);
 
@@ -116,63 +95,10 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(mAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-
-
-        updateBtn.setOnClickListener(v->{
-            SimpleDateFormat HOUR = new SimpleDateFormat("HH");
-            SimpleDateFormat MINUTE = new SimpleDateFormat("mm");
-
-            int format_HOUR = Integer.parseInt(HOUR.format(System.currentTimeMillis()));
-            int format_MINUTE = Integer.parseInt(MINUTE.format(System.currentTimeMillis()));
-
-            switch (pagerPosition){
-                case 0:
-                    nowMemo = MondayFragment.checkMemo(format_HOUR*60+format_MINUTE);
-                    nowTodo.setText(nowMemo);
-                    break;
-
-                case 1:
-                    nowMemo = TuesdayFragment.checkMemo(format_HOUR*60+format_MINUTE);
-                    nowTodo.setText(nowMemo);
-                    break;
-
-                case 2:
-                    nowMemo = WednesdayFragment.checkMemo(format_HOUR*60+format_MINUTE);
-                    nowTodo.setText(nowMemo);
-                    break;
-
-                case 3:
-                    nowMemo = ThursdayFragment.checkMemo(format_HOUR*60+format_MINUTE);
-                    nowTodo.setText(nowMemo);
-                    break;
-
-                case 4:
-                    nowMemo = FridayFragment.checkMemo(format_HOUR*60+format_MINUTE);
-                    nowTodo.setText(nowMemo);
-                    break;
-
-                case 5:
-                    nowMemo = SaturdayFragment.checkMemo(format_HOUR*60+format_MINUTE);
-                    nowTodo.setText(nowMemo);
-                    break;
-
-                case 6:
-                    nowMemo = SundayFragment.checkMemo(format_HOUR*60+format_MINUTE);
-                    nowTodo.setText(nowMemo);
-                    break;
-            }
-
-
-
-        });
-
-
-
-
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                nowTodo.setText("");
+                memoTextView.setText("");
             }
 
             @Override
@@ -247,27 +173,69 @@ public class MainActivity extends AppCompatActivity {
                     MondayFragment.draw(startAngle,swipeAngle,color);
                     MondayFragment.addMemo(marginTop,marginLeft,textView, memo);
                     break;
+
                 case 1:
+                    TuesdayFragment.fromHourArray.add(from_hour);
+                    TuesdayFragment.fromMinuteArray.add(from_minute);
+
+                    TuesdayFragment.toHourArray.add(to_hour);
+                    TuesdayFragment.toMinuteArray.add(to_minute);
+
                     TuesdayFragment.draw(startAngle,swipeAngle,color);
                     TuesdayFragment.addMemo(marginTop,marginLeft,textView, memo);
                     break;
+
                 case 2:
+                    WednesdayFragment.fromHourArray.add(from_hour);
+                    WednesdayFragment.fromMinuteArray.add(from_minute);
+
+                    WednesdayFragment.toHourArray.add(to_hour);
+                    WednesdayFragment.toMinuteArray.add(to_minute);
+
                     WednesdayFragment.draw(startAngle,swipeAngle,color);
                     WednesdayFragment.addMemo(marginTop,marginLeft,textView, memo);
                     break;
+
                 case 3:
+                    ThursdayFragment.fromHourArray.add(from_hour);
+                    ThursdayFragment.fromMinuteArray.add(from_minute);
+
+                    ThursdayFragment.toHourArray.add(to_hour);
+                    ThursdayFragment.toMinuteArray.add(to_minute);
+
                     ThursdayFragment.draw(startAngle,swipeAngle,color);
                     ThursdayFragment.addMemo(marginTop,marginLeft,textView, memo);
                     break;
+
                 case 4:
+                    FridayFragment.fromHourArray.add(from_hour);
+                    FridayFragment.fromMinuteArray.add(from_minute);
+
+                    FridayFragment.toHourArray.add(to_hour);
+                    FridayFragment.toMinuteArray.add(to_minute);
+
                     FridayFragment.draw(startAngle,swipeAngle,color);
                     FridayFragment.addMemo(marginTop,marginLeft,textView, memo);
                     break;
+
                 case 5:
+                    SaturdayFragment.fromHourArray.add(from_hour);
+                    SaturdayFragment.fromMinuteArray.add(from_minute);
+
+                    SaturdayFragment.toHourArray.add(to_hour);
+                    SaturdayFragment.toMinuteArray.add(to_minute);
+
                     SaturdayFragment.draw(startAngle,swipeAngle,color);
                     SaturdayFragment.addMemo(marginTop,marginLeft,textView, memo);
                     break;
+
                 case 6:
+                    SundayFragment.fromHourArray.add(from_hour);
+                    SundayFragment.fromMinuteArray.add(from_minute);
+
+                    SundayFragment.toHourArray.add(to_hour);
+                    SundayFragment.toMinuteArray.add(to_minute);
+
                     SundayFragment.draw(startAngle,swipeAngle,color);
                     SundayFragment.addMemo(marginTop,marginLeft,textView, memo);
                     break;
@@ -406,5 +374,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return 0;
+    }
+
+    public static void setMemoTextView(String memo){
+        memoTextView.setText(memo);
     }
 }

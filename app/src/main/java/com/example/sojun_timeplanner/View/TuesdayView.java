@@ -41,7 +41,7 @@ public class TuesdayView extends View {
         paint.setColor(Color.parseColor("BLACK"));
         paint.setStyle(Paint.Style.STROKE);
         RectF rectF = new RectF();
-        rectF.set(100,100,1000,1000);
+        rectF.set(150,200,1350,1400);
         canvas.drawArc(rectF,0,360,true,paint);
 
         paint.setStyle(Paint.Style.FILL);
