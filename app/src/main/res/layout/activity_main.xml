@@ -36,6 +36,23 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constrainedHeight="true" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#000000"
+            app:layout_constraintTop_toBottomOf="@id/tab"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="삭제"
+            android:id="@+id/deleteBtn"
+            app:layout_constraintTop_toTopOf="@+id/ViewPager"
+            app:layout_constraintRight_toRightOf="parent"/>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="400dp"
@@ -43,7 +60,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="@+id/ViewPager"
-            android:background="@drawable/border"
             android:id="@+id/ConstraintLayout">
 
 <!--            시간 표시하는 텍스트-->
@@ -98,6 +114,15 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            app:layout_constraintBottom_toTopOf="@id/memoText"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="#000000"
+            />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -139,6 +164,15 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread_inside"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#000000"
+            app:layout_constraintTop_toBottomOf="@id/memoText"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -147,7 +181,7 @@
             app:layout_constraintTop_toBottomOf="@id/tab"
             app:layout_constraintHorizontal_bias="0"
             android:id="@+id/color_spinner"
-            android:entries="@array/spinner_color"/>
+            android:entries="@array/spinner_color" />
 
         <TimePicker
             android:layout_width="wrap_content"

@@ -36,30 +36,15 @@ public class MondayFragment extends Fragment{
     public static ArrayList toHourArray = new ArrayList();
     public static ArrayList toMinuteArray = new ArrayList();
     public static ArrayList<String> memoArray = new ArrayList<String>();
+    public static ArrayList<TextView> textViewArray = new ArrayList<TextView>();
 
     MainActivity mainActivity;
-
-    private ViewPager mViewPager;
-    private TabLayout tabLayout;
-    private PagerAdapter adapter;
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        this.mViewPager = (ViewPager)view.findViewById(R.id.ViewPager);
-        this.mViewPager.setAdapter(adapter);
-
-        this.tabLayout = (TabLayout)view.findViewById(R.id.tab);
-        this.tabLayout.setupWithViewPager(this.mViewPager);
-
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-        this.adapter = new PagerAdapter(getChildFragmentManager());
+
+
     }
 
     public MondayFragment() {

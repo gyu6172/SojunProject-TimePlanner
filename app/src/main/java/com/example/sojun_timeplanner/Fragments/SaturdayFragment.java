@@ -26,6 +26,7 @@ public class SaturdayFragment extends Fragment {
     public static ArrayList fromMinuteArray = new ArrayList();
     public static ArrayList toHourArray = new ArrayList();
     public static ArrayList toMinuteArray = new ArrayList();
+    public static ArrayList<TextView> textViewArray = new ArrayList<TextView>();
 
     MainActivity mainActivity;
 

@@ -34,7 +34,6 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
         fragments.add(new SaturdayFragment());
         fragments.add(new SundayFragment());
 
-
     }
 
 
@@ -56,9 +55,6 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
         return titles[position];
     }
 
-    @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-    }
+
 
 }
