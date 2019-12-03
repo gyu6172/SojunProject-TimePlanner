@@ -1,5 +1,8 @@
 package com.example.sojun_timeplanner;
 
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,7 +20,7 @@ import com.example.sojun_timeplanner.Fragments.WednesdayFragment;
 
 import java.util.ArrayList;
 
-public class PagerAdapter extends FragmentPagerAdapter{
+public class PagerAdapter extends FragmentStatePagerAdapter{
     ArrayList<Fragment> fragments;
     String titles[]=new String[]{"월","화","수","목","금","토","일"};
     public PagerAdapter(@NonNull FragmentManager fm) {
@@ -31,6 +34,7 @@ public class PagerAdapter extends FragmentPagerAdapter{
         fragments.add(new SaturdayFragment());
         fragments.add(new SundayFragment());
 
+
     }
 
 
@@ -42,18 +46,8 @@ public class PagerAdapter extends FragmentPagerAdapter{
     }
 
     @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-    }
-
-    @Override
     public int getCount() {
         return fragments.size();
-    }
-
-    @Override
-    public int getItemPosition(@NonNull Object object) {
-        return POSITION_NONE;
     }
 
     @Nullable
@@ -61,4 +55,10 @@ public class PagerAdapter extends FragmentPagerAdapter{
     public CharSequence getPageTitle(int position) {
         return titles[position];
     }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+    }
+
 }

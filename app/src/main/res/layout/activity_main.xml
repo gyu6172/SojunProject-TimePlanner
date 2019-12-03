@@ -12,6 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/parentConstraint"
         >
 
 
@@ -25,6 +26,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 
+
         <androidx.viewpager.widget.ViewPager
             android:layout_width="match_parent"
             android:layout_height="400dp"
@@ -32,9 +34,16 @@
             app:layout_constraintTop_toBottomOf="@+id/tab"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constrainedHeight="true" >
+            app:layout_constrainedHeight="true" />
 
-        </androidx.viewpager.widget.ViewPager>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="업데이트"
+            app:layout_constraintTop_toTopOf="@+id/ViewPager"
+            app:layout_constraintRight_toRightOf="parent"
+            android:id="@+id/updateBtn"
+            />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -95,11 +104,48 @@
 
 <!--            여기까지-->
 
-
-
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="지금은"
+            android:textSize="30sp"
+            android:id="@+id/now"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            app:layout_constraintTop_toBottomOf="@+id/ViewPager"
+            app:layout_constraintRight_toLeftOf="@+id/memoText"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="45sp"
+            android:id="@+id/memoText"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintTop_toBottomOf="@+id/ViewPager"
+            app:layout_constraintLeft_toRightOf="@+id/now"
+            app:layout_constraintRight_toLeftOf="@+id/timeTodo"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:text="시간"
+            android:textStyle="bold"
+            android:id="@+id/timeTodo"
+            android:textColor="#000000"
+            app:layout_constraintTop_toBottomOf="@+id/ViewPager"
+            app:layout_constraintLeft_toRightOf="@+id/memoText"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"/>
 
         <Spinner
             android:layout_width="wrap_content"
@@ -115,7 +161,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:timePickerMode="spinner"
-            app:layout_constraintTop_toBottomOf="@id/ViewPager"
+            app:layout_constraintTop_toBottomOf="@id/memoText"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintHorizontal_bias="0"

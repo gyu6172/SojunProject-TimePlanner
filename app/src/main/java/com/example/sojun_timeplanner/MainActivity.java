@@ -1,13 +1,20 @@
 package com.example.sojun_timeplanner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -27,6 +34,8 @@ import com.example.sojun_timeplanner.View.TuesdayView;
 import com.example.sojun_timeplanner.View.WednesdayView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.text.SimpleDateFormat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,9 +68,24 @@ public class MainActivity extends AppCompatActivity {
 
     String color;
     String memo;
+    String textColor;
+    int marginTop, marginLeft;
+    int fromTimeWrittenMinute;
+    int toTimeWrittenMinute;
+    int middleTimeOfFromTo;
+
     int from_hour, from_minute;
     int to_hour, to_minute;
+    int textViewSize;
     int pagerPosition;
+
+    ConstraintLayout constraintLayout;
+    ConstraintLayout parentConstraint;
+
+    Button updateBtn;
+    String nowMemo;
+    TextView nowTodo;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +101,14 @@ public class MainActivity extends AppCompatActivity {
         to_Timepicker = findViewById(R.id.to_timepicker);
         memoEditText = findViewById(R.id.memo_input);
         add_Button = findViewById(R.id.add_Button);
+        parentConstraint = findViewById(R.id.parentConstraint);
+        nowTodo = findViewById(R.id.memoText);
 
+        updateBtn = findViewById(R.id.updateBtn);
+
+        constraintLayout = findViewById(R.id.ConstraintLayout);
+
+        viewPager.bringToFront();
         color_Spinner.bringToFront();
 
         mAdapter = new PagerAdapter(getSupportFragmentManager());
@@ -85,10 +116,63 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(mAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
+
+
+        updateBtn.setOnClickListener(v->{
+            SimpleDateFormat HOUR = new SimpleDateFormat("HH");
+            SimpleDateFormat MINUTE = new SimpleDateFormat("mm");
+
+            int format_HOUR = Integer.parseInt(HOUR.format(System.currentTimeMillis()));
+            int format_MINUTE = Integer.parseInt(MINUTE.format(System.currentTimeMillis()));
+
+            switch (pagerPosition){
+                case 0:
+                    nowMemo = MondayFragment.checkMemo(format_HOUR*60+format_MINUTE);
+                    nowTodo.setText(nowMemo);
+                    break;
+
+                case 1:
+                    nowMemo = TuesdayFragment.checkMemo(format_HOUR*60+format_MINUTE);
+                    nowTodo.setText(nowMemo);
+                    break;
+
+                case 2:
+                    nowMemo = WednesdayFragment.checkMemo(format_HOUR*60+format_MINUTE);
+                    nowTodo.setText(nowMemo);
+                    break;
+
+                case 3:
+                    nowMemo = ThursdayFragment.checkMemo(format_HOUR*60+format_MINUTE);
+                    nowTodo.setText(nowMemo);
+                    break;
+
+                case 4:
+                    nowMemo = FridayFragment.checkMemo(format_HOUR*60+format_MINUTE);
+                    nowTodo.setText(nowMemo);
+                    break;
+
+                case 5:
+                    nowMemo = SaturdayFragment.checkMemo(format_HOUR*60+format_MINUTE);
+                    nowTodo.setText(nowMemo);
+                    break;
+
+                case 6:
+                    nowMemo = SundayFragment.checkMemo(format_HOUR*60+format_MINUTE);
+                    nowTodo.setText(nowMemo);
+                    break;
+            }
+
+
+
+        });
+
+
+
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                nowTodo.setText("");
             }
 
             @Override
@@ -106,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                Toast.makeText(MainActivity.this, ""+MondayFragment.mondayView.getCount(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -121,14 +204,33 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+
+
         add_Button.setOnClickListener(v->{
             color = color_Spinner.getSelectedItem().toString();
             memo = memoEditText.getText().toString();
+            textColor = setTextColor(color);
+
             from_hour = from_Timepicker.getHour();
             from_minute = from_Timepicker.getMinute();
 
             to_hour = to_Timepicker.getHour();
             to_minute = to_Timepicker.getMinute();
+
+            fromTimeWrittenMinute = from_hour*60 + from_minute;
+            toTimeWrittenMinute = to_hour*60 + to_minute;
+
+            middleTimeOfFromTo = middle_of_time(fromTimeWrittenMinute, toTimeWrittenMinute);
+
+            marginTop = setMarginTOP(middleTimeOfFromTo/60, middleTimeOfFromTo%60);
+            marginLeft = setMarginLeft(middleTimeOfFromTo/60, middleTimeOfFromTo%60);
+
+            textViewSize = setTextSize(from_hour, to_hour);
+
+            TextView textView = new TextView(getApplicationContext());
+            textView.setTextColor(Color.parseColor(textColor));
+            textView.setTextSize(textViewSize);
+            textView.setText(memo);
 
             float startAngle = circleAngle(from_hour,from_minute);
             float endAngle = circleAngle(to_hour,to_minute);
@@ -136,28 +238,43 @@ public class MainActivity extends AppCompatActivity {
 
             switch(pagerPosition){
                 case 0:
+                    MondayFragment.fromHourArray.add(from_hour);
+                    MondayFragment.fromMinuteArray.add(from_minute);
+
+                    MondayFragment.toHourArray.add(to_hour);
+                    MondayFragment.toMinuteArray.add(to_minute);
+
                     MondayFragment.draw(startAngle,swipeAngle,color);
+                    MondayFragment.addMemo(marginTop,marginLeft,textView, memo);
                     break;
                 case 1:
                     TuesdayFragment.draw(startAngle,swipeAngle,color);
+                    TuesdayFragment.addMemo(marginTop,marginLeft,textView, memo);
                     break;
                 case 2:
                     WednesdayFragment.draw(startAngle,swipeAngle,color);
+                    WednesdayFragment.addMemo(marginTop,marginLeft,textView, memo);
                     break;
                 case 3:
                     ThursdayFragment.draw(startAngle,swipeAngle,color);
+                    ThursdayFragment.addMemo(marginTop,marginLeft,textView, memo);
                     break;
                 case 4:
                     FridayFragment.draw(startAngle,swipeAngle,color);
+                    FridayFragment.addMemo(marginTop,marginLeft,textView, memo);
                     break;
                 case 5:
                     SaturdayFragment.draw(startAngle,swipeAngle,color);
+                    SaturdayFragment.addMemo(marginTop,marginLeft,textView, memo);
                     break;
                 case 6:
                     SundayFragment.draw(startAngle,swipeAngle,color);
+                    SundayFragment.addMemo(marginTop,marginLeft,textView, memo);
                     break;
             }
         });
+
+
 
     }
 
@@ -202,162 +319,92 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public int marginLeft(int middle){
+    public String setTextColor(String backgroundColor){
 
-        switch (middle){
+        switch (backgroundColor){
 
-            case 0:
-                return 584;
+            case "RED":
 
-            case 1:
-                return 648;
+            case "BLUE":
+                return "WHITE";
 
-            case 2:
-                return 712;
+            case "GREEN":
 
-            case 3:
-                return 776;
+            case "YELLOW":
 
-            case 4:
-                return 840;
+            case "CYAN":
 
-            case 5:
-                return 904;
+            case "GRAY":
+                return "BLACK";
 
-            case 6:
-                return 968;
+            default:    //MAGENTA
+                return "WHITE";
 
-            case 7:
-                return 904;
 
-            case 8:
-                return 840;
-
-            case 9:
-                return 776;
-
-            case 10:
-                return 712;
-
-            case 11:
-                return 648;
-
-            case 12:
-                return 584;
-
-            case 13:
-                return 520;
-
-            case 14:
-                return 456;
-
-            case 15:
-                return 392;
-
-            case 16:
-                return 328;
-
-            case 17:
-                return 264;
-
-            case 18:
-                return 200;
-
-            case 19:
-                return 264;
-
-            case 20:
-                return 328;
-
-            case 21:
-                return 392;
-
-            case 22:
-                return 456;
-
-            default:
-                return 520;
         }
     }
 
-    public int marginTop(int middle){
-
-        switch (middle){
-
-            case 0:
-                return 200;
-
-            case 1:
-                return 264;
-
-            case 2:
-                return 328;
-
-            case 3:
-                return 392;
-
-            case 4:
-                return 456;
-
-            case 5:
-                return 520;
-
-            case 6:
-                return 584;
-
-            case 7:
-                return 648;
-
-            case 8:
-                return 712;
-
-            case 9:
-                return 776;
-
-            case 10:
-                return 840;
-
-            case 11:
-                return 904;
-
-            case 12:
-                return 968;
-
-            case 13:
-                return 904;
-
-            case 14:
-                return 840;
-
-            case 15:
-                return 776;
-
-            case 16:
-                return 712;
-
-            case 17:
-                return 648;
-
-            case 18:
-                return 584;
-
-            case 19:
-                return 520;
-
-            case 20:
-                return 456;
-
-            case 21:
-                return 392;
-
-            case 22:
-                return 328;
-
-            default:
-                return 264;
+    public int setMarginTOP(int hour, int minute){
+        if(0<hour && hour<12){
+            return (int) ((hour*50) + 200 + (minute*0.83));
+        }
+        else if(12<hour && hour<24){
+            return (int) ((24 - hour)*50 + 200 + (minute * 0.83));
+        }
+        else if(hour == 0){
+            return 200;
+        }
+        else{
+            return 800;
         }
     }
 
+    public int setMarginLeft(int hour, int minute){
+        if(6<hour && hour<18){
+            return (int) ((18-hour)*50 + 200 + (minute*0.83));
+        }
+        else if(18<hour || hour<6){
+            if(hour>18){
+                return (int) ((hour-18)*50 + 200 + (minute*0.83));
+            }
+            else if(hour<6){
+                return (int) ((hour*50)+500 + (minute*0.83));
+            }
+        }
+        else if(hour == 18){
+            return 200;
+        }
+        else if(hour == 6){
+            return 800;
+        }
+        return 0;
+    }
 
-
+    public int setTextSize(int from_hour, int to_hour){
+        if(to_hour > from_hour){
+            int gap = to_hour-from_hour;
+            if(gap >= 6){
+                return 30;
+            }
+            else if (gap >= 4) {
+                return 25;
+            }
+            else if(gap >= 2){
+                return 20;
+            }
+        }
+        else if(to_hour < from_hour){
+            int gap = 24-to_hour + from_hour;
+            if(gap >= 6){
+                return 30;
+            }
+            else if (gap >= 4) {
+                return 25;
+            }
+            else if(gap >= 2){
+                return 20;
+            }
+        }
+        return 0;
+    }
 }
