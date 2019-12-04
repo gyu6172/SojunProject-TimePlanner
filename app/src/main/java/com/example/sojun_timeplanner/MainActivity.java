@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
     ConstraintLayout parentConstraint;
 
     public static TextView memoTextView;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,9 +154,7 @@ public class MainActivity extends AppCompatActivity {
             to_minute = to_Timepicker.getMinute();
 
             textViewSize = setTextSize(from_hour, to_hour);
-            textColor = setTextColor(color,textViewSize);
-
-            Toast.makeText(this, textColor+textViewSize, Toast.LENGTH_SHORT).show();
+            textColor = setTextColor(color);
 
             fromTimeWrittenMinute = from_hour*60 + from_minute;
             toTimeWrittenMinute = to_hour*60 + to_minute;
@@ -163,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
 
             marginTop = setMarginTOP(middleTimeOfFromTo/60, middleTimeOfFromTo%60);
             marginLeft = setMarginLeft(middleTimeOfFromTo/60, middleTimeOfFromTo%60);
-
 
 
             TextView textView = new TextView(getApplicationContext());
@@ -578,19 +577,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public String setTextColor(String backgroundColor, int textViewSize){
+    public String setTextColor(String backgroundColor){
 
-        if(textViewSize <= 20){
-            return "BLACK";
-        }
-
-        else{
-            if(backgroundColor == "RED" || backgroundColor == "BLUE" || backgroundColor == "MAGENTA"){
+        switch (backgroundColor){
+            case "RED":
+            case "BLUE":
                 return "WHITE";
-            }
-            else{
+
+            case "YELLOW":
+            case "GREEN":
+            case "CYAN":
+            case "GRAY":
                 return "BLACK";
-            }
+
+                default:{
+                    return "WHITE";
+                }
+
+
         }
 
     }

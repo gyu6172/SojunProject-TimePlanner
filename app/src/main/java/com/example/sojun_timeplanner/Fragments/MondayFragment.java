@@ -59,6 +59,7 @@ public class MondayFragment extends Fragment{
         View v =LayoutInflater.from(getContext()).inflate(R.layout.fragment_monday,null);
         mondayView = v.findViewById(R.id.mondayView);
         relativeMemo = v.findViewById(R.id.relativeMemo);
+
         v.setOnClickListener(view -> {
             SimpleDateFormat HOUR = new SimpleDateFormat("HH");
             SimpleDateFormat MINUTE = new SimpleDateFormat("mm");
